@@ -2,3 +2,10 @@
 __pycache__/
 *.pyc
 .vscode/
+
+# C++ compiled outputs
+*.exe
+*.o
+*.obj
+*.out
+build/

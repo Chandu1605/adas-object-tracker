@@ -1,0 +1,46 @@
+
+cmake_minimum_required(VERSION 3.16)
+
+project(ADASObjectTracker LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_executable(adas_tracker
+    src/main.cpp
+    src/KalmanFilter.cpp
+    src/TrackManager.cpp
+    src/CSVLogger.cpp
+)
+
+target_include_directories(adas_tracker
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+if(MSVC)
+    target_compile_options(adas_tracker PRIVATE /W4)
+else()
+    target_compile_options(adas_tracker PRIVATE -Wall -Wextra)
+endif()
+
+
+# Enable CTest
+enable_testing()
+
+# Kalman filter unit tests
+add_executable(test_kalman
+    tests/test_kalman.cpp
+    src/KalmanFilter.cpp
+)
+
+target_include_directories(test_kalman
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+add_test(
+    NAME KalmanFilterTests
+    COMMAND test_kalman
+)
