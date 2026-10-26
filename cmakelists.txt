@@ -19,6 +19,16 @@ target_include_directories(adas_tracker
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+
+# Python-to-C++ tracking bridge
+add_executable(tracker_bridge
+    src/tracker_bridge.cpp
+    src/KalmanFilter.cpp
+    src/TrackManager.cpp
+)
+
+target_include_directories(tracker_bridge PRIVATE include)
+
 if(MSVC)
     target_compile_options(adas_tracker PRIVATE /W4)
 else()

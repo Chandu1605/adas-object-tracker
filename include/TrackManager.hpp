@@ -17,8 +17,8 @@ private:
     std::vector<Track> tracks_;
 
     int nextId_ = 101;
-    int maxMisses_ = 2;
-    double maxDistance_ = 4.0;
+    int maxMisses_ = 10;
+    double maxDistance_ = 60.0;
 
     void predictTracks(double dt);
     void removeStaleTracks();

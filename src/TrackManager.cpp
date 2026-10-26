@@ -43,17 +43,26 @@ void TrackManager::update(
 
     // 2. Find possible associations
     for (size_t t = 0; t < tracks_.size(); ++t) {
-        for (size_t d = 0; d < detections.size(); ++d) {
-            const double distance = std::hypot(
-                tracks_[t].x() - detections[d].x,
-                tracks_[t].y() - detections[d].y
-            );
+    for (size_t d = 0; d < detections.size(); ++d) {
 
-            if (distance <= maxDistance_) {
-                candidates.push_back({t, d, distance});
-            }
+        // Only match objects of the same class.
+        // -1 represents an unspecified class.
+        if (tracks_[t].classId != -1 &&
+            detections[d].classId != -1 &&
+            tracks_[t].classId != detections[d].classId) {
+            continue;
+        }
+
+        const double distance = std::hypot(
+            tracks_[t].x() - detections[d].x,
+            tracks_[t].y() - detections[d].y
+        );
+
+        if (distance <= maxDistance_) {
+            candidates.push_back({t, d, distance});
         }
     }
+}
 
     // 3. Prefer shorter association distances
     std::sort(
@@ -96,12 +105,13 @@ void TrackManager::update(
 
     // 7. Create tracks for new detections
     for (size_t d = 0; d < detections.size(); ++d) {
-        if (!detectionMatched[d]) {
+        if (!detectionMatched[d]) {            
             tracks_.emplace_back(
-                nextId_++,
-                detections[d].x,
-                detections[d].y
-            );
+            nextId_++,
+            detections[d].x,
+            detections[d].y,
+            detections[d].classId
+        );
         }
     }
 }
